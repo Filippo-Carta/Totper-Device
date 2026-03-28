@@ -3,7 +3,7 @@
 TOTP (Time-based One-Time Password) generator running on an ESP32-C3, controlled via USB serial from the companion Android app. No WiFi, no cloud, no internet connection required at any point.
 
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC_BY--NC--ND_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
-[![Platform](https://img.shields.io/badge/platform-ESP32--C3-blue.svg)](https://www.espressif.com/en/products/socs/esp32-c3)
+[![Platform](https://img.shields.io/badge/platform-ESP32--C3--Mini-blue.svg)](https://www.espressif.com/en/products/socs/esp32-c3)
 [![Standard](https://img.shields.io/badge/TOTP-RFC%206238-informational.svg)](https://datatracker.ietf.org/doc/html/rfc6238)
 
 
@@ -17,7 +17,7 @@ Access to the device is protected by a 5-digit PIN entered via two physical butt
 
 
 ## Hardware
-
+All of the necessary schematic are available in the /schematic/ folder in the repository. You can print the pcb by exporting the files and sending them to a pcb manufacturer.
 | Component | Details |
 |---|---|
 | Microcontroller | ESP32-C3 |
@@ -37,6 +37,15 @@ Install these libraries via the Arduino Library Manager or PlatformIO:
 - `Preferences` — built into the ESP32 Arduino core
 - `mbedtls/md.h` — built into the ESP32 Arduino core
 
+## Security Warning
+
+This firmware stores TOTP secrets in ESP32 NVS flash **in plaintext**. NVS is not encrypted by default.
+
+This means that anyone with physical access to the device and a USB connection can dump the entire flash contents using standard tools and read every stored secret directly — regardless of the PIN. The PIN only protects the serial interface. It does not protect the flash memory itself.
+
+**If you do not enable flash encryption, physical possession of the device is equivalent to full access to all your TOTP secrets.**
+
+Without flash encryption this device should be treated as a convenience tool only, not as a secure hardware token. With flash encryption enabled, physical attacks become significantly harder.
 
 ## Serial Protocol
 
@@ -129,3 +138,6 @@ The Android app that communicates with this firmware is available at:
 Copyright Filippo Carta — [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 
 Free to use and share with attribution. Modification and commercial use are not permitted.
+
+
+## HAVE FUN!
